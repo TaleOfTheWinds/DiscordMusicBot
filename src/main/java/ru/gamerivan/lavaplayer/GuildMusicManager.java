@@ -2,15 +2,18 @@ package ru.gamerivan.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import net.dv8tion.jda.api.entities.Guild;
 
 public class GuildMusicManager {
 
     private TrackScheduler trackScheduler;
     private AudioForwarder audioForwarder;
+    private final Guild guild;
 
-    public GuildMusicManager(AudioPlayerManager manager) {
+    public GuildMusicManager(AudioPlayerManager manager, Guild guild) {
+        this.guild = guild;
         AudioPlayer player = manager.createPlayer();
-        trackScheduler = new TrackScheduler(player);
+        trackScheduler = new TrackScheduler(player, this.guild);
         player.addListener(trackScheduler);
         audioForwarder = new AudioForwarder(player);
     }

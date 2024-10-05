@@ -2,10 +2,7 @@ package ru.gamerivan;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import ru.gamerivan.commands.Play;
-import ru.gamerivan.commands.Quit;
-import ru.gamerivan.commands.Skip;
-import ru.gamerivan.commands.Test;
+import ru.gamerivan.commands.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,6 +13,5 @@ public class Main {
         manager.add(new Skip());
         manager.add(new Quit());
         jda.addEventListener(manager);
-        jda.addEventListener();
     }
 }

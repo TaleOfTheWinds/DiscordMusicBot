@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'ru.gamerivan'
@@ -15,4 +16,16 @@ dependencies {
     implementation group: 'dev.arbjerg', name: 'lavaplayer', version: '2.2.2'
     implementation("dev.lavalink.youtube:v2:1.8.3")
     implementation("net.dv8tion:JDA:5.1.1")
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes 'Main-Class': 'ru.gamerivan.Main'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
