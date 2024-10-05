@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.gamerivan'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" } // For com.github.walkyst.JAADec-fork:jaadec-ext-aac & ibxm-fork:com.github.walkyst:ibxm-fork
+    maven { url "https://maven.lavalink.dev/releases" }
+}
+
+dependencies {
+    implementation group: 'dev.arbjerg', name: 'lavaplayer', version: '2.2.2'
+    implementation("dev.lavalink.youtube:v2:1.8.3")
+    implementation("net.dv8tion:JDA:5.1.1")
+}
