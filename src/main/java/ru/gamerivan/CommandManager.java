@@ -15,12 +15,14 @@ public class CommandManager extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        Guild guild = event.getJDA().getGuildById(793540304217047040L); // айдишник нашей группы
-        for (ICommand command : commands) {
-            if(command.getOptions() == null) {
-                guild.upsertCommand(command.getName(), command.getDescription()).queue();
-            } else {
-                guild.upsertCommand(command.getName(), command.getDescription()).addOptions(command.getOptions()).queue();
+        List<Guild> guilds = event.getJDA().getGuilds();
+        for (Guild guild : guilds) {
+            for (ICommand command : commands) {
+                if (command.getOptions() == null) {
+                    guild.upsertCommand(command.getName(), command.getDescription()).queue();
+                } else {
+                    guild.upsertCommand(command.getName(), command.getDescription()).addOptions(command.getOptions()).queue();
+                }
             }
         }
     }
