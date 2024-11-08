@@ -6,15 +6,19 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TransferQueue;
 
 public class TrackScheduler extends AudioEventAdapter {
 
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue = new LinkedBlockingQueue<>();
     private final Guild guild;
+    private final Logger logger = LoggerFactory.getLogger(TransferQueue.class);
 
     public TrackScheduler(AudioPlayer player, Guild guild) {
         this.player = player;
@@ -25,7 +29,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         exception.printStackTrace();
         if (exception.getMessage().equals("Please sign in")) { // TODO exception.getCause() - read timeout
-            System.out.println("\n-----------------\nPlease sign in ^^^\nPlease sign in ^^^\nPlease sign in ^^^\n-----------------\n");
+            logger.warn("\n-----------------\nPlease sign in ^^^\nPlease sign in ^^^\nPlease sign in ^^^\n-----------------\n");
         } else queue(track.makeClone());
 
     }
@@ -38,19 +42,19 @@ public class TrackScheduler extends AudioEventAdapter {
             playerManager.clear(guild);
             guild.getAudioManager().closeAudioConnection();
         }
-        System.out.println("track end; size: " + queue.size());
+        logger.info("track end; size: " + queue.size());
     }
 
     public void queue(AudioTrack track) {
         if (!player.startTrack(track, true)) {
             queue.offer(track);
         }
-        System.out.println("added track; size: " + queue.size());
+        logger.info("added track; size: " + queue.size());
     }
 
     public void skip() {
         player.stopTrack();
-        System.out.println("skipped track; size: " + queue.size());
+        logger.info("skipped track; size: " + queue.size());
     }
 
     public void clear() {
