@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import ru.gamerivan.ICommand;
 import ru.gamerivan.lavaplayer.PlayerManager;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Play implements ICommand {
         GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inAudioChannel()) {
-            event.reply("Зайди в войс").queue();
+            event.reply("Not in voice channel").queue();
             return;
         }
 
@@ -47,7 +48,7 @@ public class Play implements ICommand {
             event.getGuild().getAudioManager().openAudioConnection(memberVoiceState.getChannel());
         } else {
             if (selfVoiceState.getChannel() != memberVoiceState.getChannel()) {
-                event.reply("Я слабенький ботик не могу перейти в другой канал <:pipsya:993915302402326720>");
+                event.reply("Bot currently in different channel").queue();
                 return;
             }
         }

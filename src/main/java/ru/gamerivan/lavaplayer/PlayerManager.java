@@ -9,9 +9,11 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
+import ru.gamerivan.Main;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class PlayerManager {
 
@@ -21,6 +23,11 @@ public class PlayerManager {
     YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
 
     public PlayerManager() {
+        // для новых ботов надо сделать .useOauth2(null, false) - авторизоваться при первом запуске и дальше вставить снизу рефреш токен
+        Properties properties = Main.getProperties();
+        if (properties.containsKey("refreshToken")) {
+            ytSourceManager.useOauth2(properties.getProperty("refreshToken"), true);
+        } else ytSourceManager.useOauth2(null, false);
         audioPlayerManager.registerSourceManager(ytSourceManager);
         AudioSourceManagers.registerRemoteSources(audioPlayerManager, YoutubeAudioSourceManager.class);
     }

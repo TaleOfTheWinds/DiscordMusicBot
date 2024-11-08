@@ -2,6 +2,7 @@ package ru.gamerivan.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
@@ -21,6 +22,15 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        exception.printStackTrace();
+        if (exception.getMessage().equals("Please sign in")) { // TODO exception.getCause() - read timeout
+            System.out.println("\n-----------------\nPlease sign in ^^^\nPlease sign in ^^^\nPlease sign in ^^^\n-----------------\n");
+        } else queue(track.makeClone());
+
+    }
+
+    @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         boolean b = player.startTrack(queue.poll(), false);
         if (!b) {
@@ -28,6 +38,7 @@ public class TrackScheduler extends AudioEventAdapter {
             playerManager.clear(guild);
             guild.getAudioManager().closeAudioConnection();
         }
+        System.out.println("track end; size: " + queue.size());
     }
 
     public void queue(AudioTrack track) {
