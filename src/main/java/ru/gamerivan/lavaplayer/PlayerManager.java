@@ -8,7 +8,10 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import dev.lavalink.youtube.clients.Web;
 import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.gamerivan.Main;
 
 import java.util.HashMap;
@@ -17,6 +20,7 @@ import java.util.Properties;
 
 public class PlayerManager {
 
+    private static Logger logger = LoggerFactory.getLogger(PlayerManager.class);
     private static PlayerManager INSTANCE;
     private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
     private AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
@@ -25,9 +29,15 @@ public class PlayerManager {
     public PlayerManager() {
         // для новых ботов надо сделать .useOauth2(null, false) - авторизоваться при первом запуске и дальше вставить снизу рефреш токен
         Properties properties = Main.getProperties();
-        if (properties.containsKey("refreshToken")) {
-            ytSourceManager.useOauth2(properties.getProperty("refreshToken"), true);
-        } else ytSourceManager.useOauth2(null, false);
+        if (Boolean.parseBoolean(properties.getProperty("usePoToken"))) {
+            Web.setPoTokenAndVisitorData(properties.getProperty("poToken"), properties.getProperty("visitorData"));
+        } else {
+            if (properties.containsKey("refreshToken")) {
+                if (!properties.getProperty("refreshToken").equals("skip")) {
+                    ytSourceManager.useOauth2(properties.getProperty("refreshToken"), true);
+                }
+            } else ytSourceManager.useOauth2(null, false);
+        }
         audioPlayerManager.registerSourceManager(ytSourceManager);
         AudioSourceManagers.registerRemoteSources(audioPlayerManager, YoutubeAudioSourceManager.class);
     }

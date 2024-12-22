@@ -30,6 +30,8 @@ public class TrackScheduler extends AudioEventAdapter {
         exception.printStackTrace();
         if (exception.getMessage().equals("Please sign in")) { // TODO exception.getCause() - read timeout
             logger.warn("\n-----------------\nPlease sign in ^^^\nPlease sign in ^^^\nPlease sign in ^^^\n-----------------\n");
+        } else if (exception.getMessage().contains("The uploader has not made this video available in your country")) {
+            logger.warn("\n-----------------\nThe uploader has not made this video available in your country\n-----------------\n");
         } else queue(track.makeClone());
 
     }
